@@ -1,19 +1,19 @@
 require 'spec_helper'
 
-describe RongServer::Base do
-  let(:base) { RongServer::Base.new(800, 600) }
+describe Rong::Server::Base do
+  let(:base) { Rong::Server::Base.new(800, 600) }
 
   context "initialization" do
     it "expects an x and y dimension" do
-      expect { RongServer::Base.new     }.to raise_error(ArgumentError)
-      expect { RongServer::Base.new(50) }.to raise_error(ArgumentError)
+      expect { Rong::Server::Base.new     }.to raise_error(ArgumentError)
+      expect { Rong::Server::Base.new(50) }.to raise_error(ArgumentError)
 
-      expect { RongServer::Base.new(50, 50) }.to_not raise_error
+      expect { Rong::Server::Base.new(50, 50) }.to_not raise_error
     end
 
     it "accepts a GameState to set the ball and paddles" do
-      game_state = RongServer::GameState.new(123, 456, [789, 101])
-      base       = RongServer::Base.new(0, 0, game_state)
+      game_state = Rong::Server::GameState.new(123, 456, [789, 101])
+      base       = Rong::Server::Base.new(0, 0, game_state)
       base.paddles.first.y.should == 123
       base.paddles.last.y.should  == 456
       base.ball.x.should          == 789
@@ -27,14 +27,14 @@ describe RongServer::Base do
     end
 
     it "has a ball" do
-      base.ball.should be_a_kind_of(RongServer::Ball)
+      base.ball.should be_a_kind_of(Rong::Server::Ball)
     end
 
     context "the paddles" do
       it "exist as a pair" do
         base.paddles.should have(2).paddles
-        base.paddles.first.should be_a_kind_of(RongServer::Paddle)
-        base.paddles.last.should  be_a_kind_of(RongServer::Paddle)
+        base.paddles.first.should be_a_kind_of(Rong::Server::Paddle)
+        base.paddles.last.should  be_a_kind_of(Rong::Server::Paddle)
       end
     end
 
@@ -83,8 +83,8 @@ describe RongServer::Base do
 
     describe "#current_game_state" do
       it "returns a GameState with the current state" do
-        expected = RongServer::GameState.new(20, 40, [42, 1337])
-        current  = RongServer::Base.new(0, 0, expected).current_game_state
+        expected = Rong::Server::GameState.new(20, 40, [42, 1337])
+        current  = Rong::Server::Base.new(0, 0, expected).current_game_state
         current.paddle1_y.should   == 20
         current.paddle2_y.should   == 40
         current.ball_coords.should == [42, 1337]

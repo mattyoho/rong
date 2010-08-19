@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe RongServer::GameState do
-  
+describe Rong::Server::GameState do
+
 end
