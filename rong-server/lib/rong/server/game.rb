@@ -9,10 +9,10 @@ module Rong
                   :scores
 
       def initialize(length, height, state=GameState.new)
-        @ball         = Ball.new(state.ball_coords[0], state.ball_coords[1])
+        @ball         = Ball.new(state.ball_position.first, state.ball_position.last)
         @board_length = length
         @board_height = height
-        @paddles      = [Paddle.new(state.paddle1_y), Paddle.new(state.paddle2_y)]
+        @paddles      = [Paddle.new(state.first_paddle_position), Paddle.new(state.second_paddle_position)]
         @scores       = [0, 0]
         @listeners    = []
         @game_state   = state

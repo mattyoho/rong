@@ -1,12 +1,27 @@
 module Rong
   module Server
     class GameState
-      attr_accessor :paddle1_y, :paddle2_y, :ball_coords
+      attr_reader :paddle_positions, :ball_positions
 
-      def initialize(paddle1_y=0, paddle2_y=0, ball_coords=[0,0])
-        @paddle1_y  = paddle1_y
-        @paddle2_y  = paddle2_y
-        @ball_coords = ball_coords
+      def initialize(paddle_positions=[0,0], ball_positions=[0,0])
+        @ball_positions    = ball_positions
+        @paddle_positions  = paddle_positions
+      end
+
+      %w(first second third fourth).each_with_index do |ordinal, index|
+        define_method("#{ordinal}_paddle_position") do
+          @paddle_positions[index]
+        end
+
+        define_method("#{ordinal}_paddle_position=") do |value|
+          @paddle_positions[index] = value
+        end
+      end
+
+      def ball_position
+        position = ball_positions.first
+        return position if position.kind_of? Array
+        ball_positions
       end
     end
   end

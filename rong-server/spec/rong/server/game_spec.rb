@@ -12,7 +12,7 @@ describe Rong::Server::Game do
     end
 
     it "accepts a GameState to set the ball and paddles" do
-      game_state = Rong::Server::GameState.new(123, 456, [789, 101])
+      game_state = Rong::Server::GameState.new([123, 456], [789, 101])
       game       = Rong::Server::Game.new(0, 0, game_state)
       game.paddles.first.y.should == 123
       game.paddles.last.y.should  == 456
@@ -83,11 +83,11 @@ describe Rong::Server::Game do
 
     describe "#current_game_state" do
       it "returns a GameState with the current state" do
-        expected = Rong::Server::GameState.new(20, 40, [42, 1337])
+        expected = Rong::Server::GameState.new([20, 40], [42, 1337])
         current  = Rong::Server::Game.new(0, 0, expected).current_game_state
-        current.paddle1_y.should   == 20
-        current.paddle2_y.should   == 40
-        current.ball_coords.should == [42, 1337]
+        current.first_paddle_position.should  == 20
+        current.second_paddle_position.should == 40
+        current.ball_position.should == [42, 1337]
       end
     end
   end
