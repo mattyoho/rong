@@ -1,10 +1,23 @@
 module Rong
   module Server
     class Paddle
-      attr_reader :y
+      attr_reader :velocity, :y
 
       def initialize(y_coord)
-        @y = y_coord
+        @velocity = 0
+        @y        = y_coord
+      end
+
+      def up
+        @velocity =  1
+      end
+
+      def down
+        @velocity = -1
+      end
+
+      def rest
+        @velocity =  0
       end
     end
   end
