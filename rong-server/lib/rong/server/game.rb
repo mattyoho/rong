@@ -1,6 +1,6 @@
 module Rong
   module Server
-    class Base
+    class Game
       attr_reader :ball,
                   :board_height,
                   :board_length,
