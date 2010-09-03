@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe Rong::Server::GameState do
+describe Rong::Elements::Entities::GameState do
   it "expects a list of paddle positions and a list ball positions" do
     expect do
-      Rong::Server::GameState.new([0,1,3], [[1,2], [2,3]])
+      Rong::Elements::Entities::GameState.new([0,1,3], [[1,2], [2,3]])
     end.to_not raise_error
   end
 
   context "paddle positions" do
-    let(:game_state) { Rong::Server::GameState.new([0,1,3,4], [1,2]) }
+    let(:game_state) { Rong::Elements::Entities::GameState.new([0,1,3,4], [1,2]) }
     let(:positions)  { game_state.paddle_positions }
 
     it "makes them available through indexing" do
@@ -38,14 +38,14 @@ describe Rong::Server::GameState do
 
   describe "#ball_position" do
     context "when @ball_positions is an array of tuples" do
-      let(:game_state) { Rong::Server::GameState.new([0,1], [[1,2], [3,2]]) }
+      let(:game_state) { Rong::Elements::Entities::GameState.new([0,1], [[1,2], [3,2]]) }
       it "picks the first tuple" do
         game_state.ball_position.should == [1,2]
       end
     end
 
     context "when @ball_positions is a tuple" do
-      let(:game_state) { Rong::Server::GameState.new([0,1], [1,2]) }
+      let(:game_state) { Rong::Elements::Entities::GameState.new([0,1], [1,2]) }
       it "returns the tuple" do
         game_state.ball_position.should == [1,2]
       end

@@ -1,4 +1,4 @@
-version = '0.1.0'
+version = '0.2.0'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -14,5 +14,8 @@ Gem::Specification.new do |s|
   s.email             = 'mby@mattyoho.com'
   s.homepage          = 'http://github.com/mattyoho/rong'
 
-  s.add_dependency('rong-server',  version)
+  s.add_dependency('rong-server',   version)
+  s.add_dependency('rong-elements', version)
+
+  s.add_development_dependency('rspec', '~> 2.0.0.beta.19')
 end

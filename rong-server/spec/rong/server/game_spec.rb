@@ -12,7 +12,7 @@ describe Rong::Server::Game do
     end
 
     it "accepts a GameState to set the ball and paddles" do
-      game_state = Rong::Server::GameState.new([123, 456], [789, 101])
+      game_state = Rong::Elements::Entities::GameState.new([123, 456], [789, 101])
       game       = Rong::Server::Game.new(0, 0, game_state)
       game.paddles.first.y.should == 123
       game.paddles.last.y.should  == 456
@@ -27,14 +27,14 @@ describe Rong::Server::Game do
     end
 
     it "has a ball" do
-      game.ball.should be_a_kind_of(Rong::Server::Ball)
+      game.ball.should be_a_kind_of(Rong::Elements::Entities::Ball)
     end
 
     context "the paddles" do
       it "exist as a pair" do
         game.paddles.should have(2).paddles
-        game.paddles.first.should be_a_kind_of(Rong::Server::Paddle)
-        game.paddles.last.should  be_a_kind_of(Rong::Server::Paddle)
+        game.paddles.first.should be_a_kind_of(Rong::Elements::Entities::Paddle)
+        game.paddles.last.should  be_a_kind_of(Rong::Elements::Entities::Paddle)
       end
     end
 
@@ -83,7 +83,7 @@ describe Rong::Server::Game do
 
     describe "#current_game_state" do
       it "returns a GameState with the current state" do
-        expected = Rong::Server::GameState.new([20, 40], [42, 1337])
+        expected = Rong::Elements::Entities::GameState.new([20, 40], [42, 1337])
         current  = Rong::Server::Game.new(0, 0, expected).current_game_state
         current.first_paddle_position.should  == 20
         current.second_paddle_position.should == 40

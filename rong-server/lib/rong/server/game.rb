@@ -1,3 +1,5 @@
+require 'rong/elements/entities'
+
 module Rong
   module Server
     class Game
@@ -8,11 +10,11 @@ module Rong
                   :paddles,
                   :scores
 
-      def initialize(length, height, state=GameState.new)
-        @ball         = Ball.new(state.ball_position.first, state.ball_position.last)
+      def initialize(length, height, state=Rong::Elements::Entities::GameState.new)
+        @ball         = Rong::Elements::Entities::Ball.new(state.ball_position.first, state.ball_position.last)
         @board_length = length
         @board_height = height
-        @paddles      = [Paddle.new(state.first_paddle_position), Paddle.new(state.second_paddle_position)]
+        @paddles      = [Rong::Elements::Entities::Paddle.new(state.first_paddle_position), Rong::Elements::Entities::Paddle.new(state.second_paddle_position)]
         @scores       = [0, 0]
         @listeners    = []
         @game_state   = state
