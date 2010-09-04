@@ -14,7 +14,8 @@ module Rong
         @ball         = Rong::Elements::Entities::Ball.new(state.ball_position.first, state.ball_position.last)
         @board_length = length
         @board_height = height
-        @paddles      = [Rong::Elements::Entities::Paddle.new(state.first_paddle_position), Rong::Elements::Entities::Paddle.new(state.second_paddle_position)]
+        @paddles      = [Rong::Elements::Entities::Paddle.new(state.first_paddle_position),
+                         Rong::Elements::Entities::Paddle.new(state.second_paddle_position)]
         @scores       = [0, 0]
         @listeners    = []
         @game_state   = state
