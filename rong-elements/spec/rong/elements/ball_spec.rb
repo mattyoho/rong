@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Rong::Elements::Entities::Ball do
-  let(:ball) { Rong::Elements::Entities::Ball.new }
+describe Rong::Elements::Ball do
+  let(:ball) { Rong::Elements::Ball.new }
 
   context "initialization" do
     it "can set x and y" do
-      ball = Rong::Elements::Entities::Ball.new(12, 34)
+      ball = Rong::Elements::Ball.new(12, 34)
       ball.x.should == 12
       ball.y.should == 34
     end

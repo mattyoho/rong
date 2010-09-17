@@ -1,3 +1,3 @@
-require 'rong/elements/entities/ball'
-require 'rong/elements/entities/paddle'
-require 'rong/elements/entities/game_state'
+require 'rong/elements/ball'
+require 'rong/elements/paddle'
+require 'rong/elements/game_state'

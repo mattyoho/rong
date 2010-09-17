@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Rong::Elements::Entities::Paddle do
-  let(:paddle) { Rong::Elements::Entities::Paddle.new(0) }
+describe Rong::Elements::Paddle do
+  let(:paddle) { Rong::Elements::Paddle.new(0) }
   it "can have a y-position" do
     paddle.y.should == 0
   end
