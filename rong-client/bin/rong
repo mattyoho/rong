@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+# Useful for running the script from the project directory
+lib_dir = File.join(File.dirname(__FILE__), '..', 'lib')
+$LOAD_PATH.unshift lib_dir if File.directory?(lib_dir)
+
+require 'rong_client/rong_window'
+
+window = RongClient::RongWindow.new
+window.show
