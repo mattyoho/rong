@@ -1,23 +1,34 @@
 module Rong
   module Elements
     class Paddle
-      attr_reader :velocity, :y
+      WIDTH  = 10
+      HEIGHT = 50
+      SPEED  = 10
+      include Entity
 
-      def initialize(y_coord)
-        @velocity = 0
-        @y        = y_coord
+      attr_accessor :name
+
+      def initialize(name, start_x, start_y)
+        self.name = name
+        super(start_x, start_y)
       end
 
-      def up
-        @velocity =  1
+      def move_up
+        self.y -= SPEED
       end
 
-      def down
-        @velocity = -1
+      def move_down
+        self.y += SPEED
       end
 
-      def rest
-        @velocity =  0
+      def hit(ball)
+        ball.reflect_x
+        if ball.y < y
+          ball.reflect_y
+        end
+
+        strength = (y - ball.y).abs / (height / 2)
+        ball.angle = 45 * strength
       end
     end
   end

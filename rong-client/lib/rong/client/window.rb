@@ -1,138 +1,13 @@
 require 'gosu'
-WINDOW_WIDTH  = 640
-WINDOW_HEIGHT = 480
-WINDOW_CENTER_X = WINDOW_WIDTH  / 2
-WINDOW_CENTER_Y = WINDOW_HEIGHT / 2
+require 'rong/elements'
 
-LEFT_PADDLE_X  = 100
-RIGHT_PADDLE_X = 540
-PADDLE_Y       = 240
-
-SERVE_FROM_X  = WINDOW_CENTER_X
-SERVE_FROM_Y  = WINDOW_CENTER_Y - 210
+require 'rong/client/drawable_element'
 
 module Rong
   module Client
-    class Game
-      WINNING_SCORE = 12
-
-      attr_accessor :paddles, :ball, :winner,
-        :left_score, :right_score,
-        :score_callbacks,  :hit_callbacks,
-        :bounce_callbacks, :win_callbacks
-
-      def initialize
-        self.left_score = self.right_score = 0
-
-        self.score_callbacks  = []
-        self.hit_callbacks    = []
-        self.bounce_callbacks = []
-        self.win_callbacks    = []
-
-        self.ball    = Ball.new(WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
-        self.paddles = [Paddle.new("Player 1", LEFT_PADDLE_X,  PADDLE_Y),
-          Paddle.new("Player 2", RIGHT_PADDLE_X, PADDLE_Y)]
-      end
-
-      def update
-        return if winner
-        ball.move
-        paddles.each {|p| check_bounds(p) }
-        check_ball_bounds
-        check_win_condition
-        paddles.each do |paddle|
-          if paddle.intersects?(ball)
-            paddle.hit(ball)
-            hit
-          end
-        end
-      end
-
-      def reset
-        self.winner     = nil
-        self.left_score = self.right_score = 0
-        reset_paddles
-        ball.serve_from(SERVE_FROM_X, SERVE_FROM_Y)
-      end
-
-      def on_score(&block)
-        score_callbacks << block if block_given?
-      end
-
-      def score
-        score_callbacks.each {|cb| cb.call(left_score, right_score) }
-      end
-
-      def on_hit(&block)
-        hit_callbacks << block if block_given?
-      end
-
-      def hit
-        hit_callbacks.each {|cb| cb.call }
-      end
-
-      def on_bounce(&block)
-        bounce_callbacks << block if block_given?
-      end
-
-      def bounce
-        bounce_callbacks.each {|cb| cb.call }
-      end
-
-      def on_win(&block)
-        win_callbacks << block if block_given?
-      end
-
-      def reset_paddles
-        paddles.first.move_to(LEFT_PADDLE_X,  PADDLE_Y)
-        paddles.last.move_to(RIGHT_PADDLE_X,  PADDLE_Y)
-      end
-
-      def declare_winner(who)
-        ball.move_to(WINDOW_CENTER_X, WINDOW_CENTER_Y)
-        ball.stop
-        self.winner = who
-        win_callbacks.each {|cb| cb.call(who) }
-      end
-
-      def check_bounds(entity)
-        if entity.top < 0
-          entity.move_to(entity.x, 0 + entity.height / 2)
-        end
-        if entity.bottom > WINDOW_HEIGHT
-          entity.move_to(entity.x, WINDOW_HEIGHT - entity.height / 2)
-        end
-      end
-
-      def check_ball_bounds
-        if ball.top < 0 || ball.bottom > WINDOW_HEIGHT
-          bounce
-          ball.reflect_y
-        end
-
-        if ball.left < 0 || ball.right > WINDOW_WIDTH
-          if ball.left < 0
-            self.left_score += 1
-            ball.serve_right_from(SERVE_FROM_X, SERVE_FROM_Y)
-          else
-            self.right_score += 1
-            ball.serve_left_from(SERVE_FROM_X, SERVE_FROM_Y)
-          end
-          score
-          reset_paddles
-        end
-      end
-
-      def check_win_condition
-        if left_score >= WINNING_SCORE
-          declare_winner(paddles.first)
-        elsif right_score >= WINNING_SCORE
-          declare_winner(paddles.last)
-        end
-      end
-    end
-
     class Window < Gosu::Window
+      include Rong::Elements::WindowConstants
+
       module ZIndex
         BACKGROUND = 0
         FOREGROUND = 1
@@ -148,13 +23,13 @@ module Rong
       SCORE_Y_OFFSET = -10
 
       attr_accessor :game, :left_score_image, :right_score_image, :winner_image,
-        :paddle_boxes, :ball_box, :paddle_blip, :wall_blip
+                    :paddle_boxes, :ball_box, :paddle_blip, :wall_blip
 
       def initialize
         super(WINDOW_WIDTH, WINDOW_HEIGHT, false)
         self.caption = "Rong: Ruby Pong"
 
-        self.game = Game.new
+        self.game = Rong::Elements::Game.new
         game.on_score  {|left, right| update_scores(left, right) }
         game.on_hit    { paddle_blip.play(1,1) }
         game.on_bounce { wall_blip.play(1,1) }
@@ -240,168 +115,6 @@ module Rong
           game.reset
           update_scores(0, 0)
         end
-      end
-    end
-
-    class DrawableElement
-      attr_reader :color, :element, :window, :z_index
-
-      def initialize(window, element, color = Gosu::Color::WHITE, z_index = Window::ZIndex::FOREGROUND)
-        @window  = window
-        @element = element
-        @color   = color
-        @z_index = z_index
-      end
-
-      def draw
-        window.draw_quad(element.left,  element.top,    color,
-                         element.left,  element.bottom, color,
-                         element.right, element.bottom, color,
-                         element.right, element.top,    color,
-                         z_index)
-      end
-
-    end
-
-    module Entity
-      attr_accessor :x, :y
-      attr_reader   :height, :width
-
-      def initialize(start_x, start_y)
-        self.x      = start_x
-        self.y      = start_y
-        @height = self.class::HEIGHT
-        @width  = self.class::WIDTH
-      end
-
-      def move_to(x, y)
-        self.x = x
-        self.y = y
-      end
-
-      def top
-        y - height / 2
-      end
-
-      def bottom
-        y + height / 2
-      end
-
-      def left
-        x - width / 2
-      end
-
-      def right
-        x + width / 2
-      end
-
-      def intersects?(other)
-        if other.left < right && other.left > left
-          if other.bottom < bottom && other.bottom > top
-            true
-          elsif other.top > top && other.top < bottom
-            true
-          else
-            false
-          end
-        elsif other.right > left && other.right < right
-          if other.bottom < bottom && other.bottom > top
-            true
-          elsif other.top > top && other.top < bottom
-            true
-          else
-            false
-          end
-        else
-          false
-        end
-      end
-    end
-
-    class Ball
-      WIDTH  = 8
-      HEIGHT = 8
-      SPEED  = 10
-      include Entity
-
-      attr_accessor :angle, :x_direction, :y_direction
-
-      def initialize(start_x, start_y, angle)
-        self.angle = angle
-        self.x_direction = self.y_direction = 1
-        super(start_x, start_y)
-      end
-
-      def reflect_x
-        self.x_direction *= -1
-      end
-
-      def reflect_y
-        self.y_direction *= -1
-      end
-
-      def move
-        self.x += SPEED * Math.cos(angle_radians) * x_direction
-        self.y += SPEED * Math.sin(angle_radians) * y_direction
-      end
-
-      def stop
-        self.x_direction = self.y_direction = 0
-      end
-
-      def serve_left_from(x, y)
-        move_to(x, y)
-        self.y_direction = 1
-        self.x_direction = -1
-        self.angle = 45
-      end
-
-      def serve_right_from(x, y)
-        move_to(x, y)
-        self.y_direction = 1
-        self.x_direction = 1
-        self.angle = 45
-      end
-
-      def serve_from(x, y)
-        rand(2) == 1 ? serve_right_from(x, y) : serve_left_from(x, y)
-      end
-
-      protected
-      def angle_radians
-        angle * (Math::PI / 180)
-      end
-    end
-
-    class Paddle
-      WIDTH  = 10
-      HEIGHT = 50
-      SPEED  = 10
-      include Entity
-
-      attr_accessor :name
-
-      def initialize(name, start_x, start_y)
-        self.name = name
-        super(start_x, start_y)
-      end
-
-      def move_up
-        self.y -= SPEED
-      end
-
-      def move_down
-        self.y += SPEED
-      end
-
-      def hit(ball)
-        ball.reflect_x
-        if ball.y < y
-          ball.reflect_y
-        end
-
-        strength = (y - ball.y).abs / (height / 2)
-        ball.angle = 45 * strength
       end
     end
   end
