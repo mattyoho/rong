@@ -1,4 +1,4 @@
-version = '0.2.1'
+version = '0.2.2'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -11,6 +11,9 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.7"
 
   s.files = Dir['lib/**/*']
+
+  s.executables        = %w(rong)
+  s.default_executable = "rong"
 
   s.author            = 'Matt Yoho'
   s.email             = 'mby@mattyoho.com'

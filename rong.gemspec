@@ -1,4 +1,4 @@
-version = '0.2.2'
+version = '0.2.3'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('rong-server',   '0.2.1')
   s.add_dependency('rong-elements', '0.2.1')
-  s.add_dependency('rong-client',   '0.2.1')
+  s.add_dependency('rong-client',   '0.2.2')
 
   s.add_development_dependency('rspec', '~> 2.5.0')
 end
