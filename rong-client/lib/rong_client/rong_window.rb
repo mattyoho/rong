@@ -10,7 +10,8 @@ module RongClient
 
     WINDOW_WIDTH  = 640
     WINDOW_HEIGHT = 480
-    WINDOW_CENTER_X = WINDOW_WIDTH / 2
+    WINDOW_CENTER_X = WINDOW_WIDTH  / 2
+    WINDOW_CENTER_Y = WINDOW_HEIGHT / 2
 
     STRIPE_LEFT  = WINDOW_CENTER_X - 2
     STRIPE_RIGHT = WINDOW_CENTER_X + 2
@@ -19,10 +20,10 @@ module RongClient
     RIGHT_PADDLE_X = 540
     PADDLE_Y       = 240
 
-    SCORE_FONT     = 'Krungthep'
-    SCORE_HEIGHT   = 60
+    SCORE_FONT     = 'Synchro LET'
+    SCORE_HEIGHT   = 90
     SCORE_X_OFFSET = 40
-    SCORE_Y_OFFSET = 20
+    SCORE_Y_OFFSET = -10
 
     attr_accessor :paddles, :ball, :left_score, :right_score,
                   :left_score_image, :right_score_image, :paddle_blip, :wall_blip
@@ -32,9 +33,10 @@ module RongClient
       self.caption = "Rong: Ruby Pong"
       self.left_score = self.right_score = 0
 
-      self.ball    = Ball.new(self, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0)
+      self.ball    = Ball.new(self, WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
       self.paddles = [Paddle.new(self, LEFT_PADDLE_X,  PADDLE_Y),
                       Paddle.new(self, RIGHT_PADDLE_X, PADDLE_Y)]
+
       self.left_score_image  = Gosu::Image.from_text(self, "00", SCORE_FONT, SCORE_HEIGHT)
       self.right_score_image = Gosu::Image.from_text(self, "00", SCORE_FONT, SCORE_HEIGHT)
 
@@ -42,11 +44,12 @@ module RongClient
     end
 
     def load_samples
-      blip_file = File.join(File.dirname(__FILE__), '..', '..', 'assets', 'samples', 'pongblipG_5.wav')
-      self.paddle_blip = Gosu::Sample.new(self, blip_file)
+      self.paddle_blip = Gosu::Sample.new(self, asset_sample('pongblipG_5.wav'))
+      self.wall_blip   = Gosu::Sample.new(self, asset_sample('pongblipF5.wav'))
+    end
 
-      blip_file = File.join(File.dirname(__FILE__), '..', '..', 'assets', 'samples', 'pongblipF5.wav')
-      self.wall_blip = Gosu::Sample.new(self, blip_file)
+    def asset_sample(file_name)
+      File.join(File.dirname(__FILE__), '..', '..', 'assets', 'samples', file_name)
     end
 
     def update
@@ -91,11 +94,15 @@ module RongClient
       if ball.left < 0
         self.left_score += 1
         update_scores
-        ball.reflect_x
+        paddles.first.move_to(LEFT_PADDLE_X,  PADDLE_Y)
+        paddles.last.move_to(RIGHT_PADDLE_X,  PADDLE_Y)
+        ball.serve_right_from(WINDOW_CENTER_X, WINDOW_CENTER_Y - 210)
       elsif ball.right > WINDOW_WIDTH
         self.right_score += 1
         update_scores
-        ball.reflect_x
+        paddles.first.move_to(LEFT_PADDLE_X,  PADDLE_Y)
+        paddles.last.move_to(RIGHT_PADDLE_X,  PADDLE_Y)
+        ball.serve_left_from(WINDOW_CENTER_X, WINDOW_CENTER_Y - 210)
       end
     end
 
@@ -209,30 +216,48 @@ module RongClient
     SPEED  = 10
     include Entity
 
-    attr_accessor :angle
-    attr_reader   :x_direction, :y_direction
+    attr_accessor :angle, :x_direction, :y_direction
 
-    def initialize(window, start_x, start_y, angle=90)
+    def initialize(window, start_x, start_y, angle)
       self.angle = angle
-      @x_direction = @y_direction = 1
+      self.x_direction = self.y_direction = 1
       super(window, start_x, start_y)
     end
 
-    def angle_radians
-      angle * (Math::PI / 180)
-    end
-
     def reflect_x
-      @x_direction *= -1
+      self.x_direction *= -1
     end
 
     def reflect_y
-      @y_direction *= -1
+      self.y_direction *= -1
     end
 
     def move
       self.x += SPEED * Math.cos(angle_radians) * x_direction
       self.y += SPEED * Math.sin(angle_radians) * y_direction
+    end
+
+    def serve_left_from(x, y)
+      move_to(x, y)
+      self.y_direction = 1
+      self.x_direction = -1
+      self.angle = 45
+    end
+
+    def serve_right_from(x, y)
+      move_to(x, y)
+      self.y_direction = 1
+      self.x_direction = 1
+      self.angle = 45
+    end
+
+    def serve_from(x, y)
+      rand(2) == 1 ? serve_right_from(x, y) : serve_left_from(x, y)
+    end
+
+    protected
+    def angle_radians
+      angle * (Math::PI / 180)
     end
   end
 
@@ -256,7 +281,8 @@ module RongClient
         ball.reflect_y
       end
 
-      ball.angle = rand(46)
+      strength = (y - ball.y).abs / (height / 2)
+      ball.angle = 45 * strength
     end
   end
 end
