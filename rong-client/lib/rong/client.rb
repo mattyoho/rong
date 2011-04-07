@@ -1,0 +1,1 @@
+require 'rong/client/window'

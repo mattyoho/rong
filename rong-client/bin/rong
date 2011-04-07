@@ -4,7 +4,7 @@
 lib_dir = File.join(File.dirname(__FILE__), '..', 'lib')
 $LOAD_PATH.unshift lib_dir if File.directory?(lib_dir)
 
-require 'rong_client/rong_window'
+require 'rong/client'
 
-window = RongClient::RongWindow.new
+window = Rong::Client::Window.new
 window.show
