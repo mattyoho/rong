@@ -1,4 +1,4 @@
-version = '0.2.2'
+version = '0.2.3'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version     = '>= 1.8.7'
   s.required_rubygems_version = ">= 1.3.7"
 
-  s.files = Dir['lib/**/*']
+  s.files = Dir['lib/**/*', 'assets/samples/*']
 
   s.executables        = %w(rong)
   s.default_executable = "rong"

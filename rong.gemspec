@@ -14,9 +14,9 @@ Gem::Specification.new do |s|
   s.email             = 'mby@mattyoho.com'
   s.homepage          = 'http://github.com/mattyoho/rong'
 
-  s.add_dependency('rong-server',   '0.2.1')
-  s.add_dependency('rong-elements', '0.2.1')
-  s.add_dependency('rong-client',   '0.2.2')
+  s.add_dependency('rong-server',   '~> 0.2.1')
+  s.add_dependency('rong-elements', '~> 0.2.1')
+  s.add_dependency('rong-client',   '~> 0.2.3')
 
   s.add_development_dependency('rspec', '~> 2.5.0')
 end
