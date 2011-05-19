@@ -96,8 +96,8 @@ module Rong
       end
 
       def draw_scores
-        left_score_image.draw(WINDOW_CENTER_X - (SCORE_X_OFFSET + left_score_image.width), SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
-        right_score_image.draw(WINDOW_CENTER_X + SCORE_X_OFFSET, SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
+        right_score_image.draw(WINDOW_CENTER_X - (SCORE_X_OFFSET + left_score_image.width), SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
+        left_score_image.draw(WINDOW_CENTER_X + SCORE_X_OFFSET, SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
       end
 
       def update_scores(left_score, right_score)
