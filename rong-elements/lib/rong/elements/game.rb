@@ -22,8 +22,8 @@ module Rong
         self.win_callbacks    = []
 
         self.ball    = Ball.new(WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
-        self.paddles = [Paddle.new("Player 1", LEFT_PADDLE_X,  PADDLE_Y),
-          Paddle.new("Player 2", RIGHT_PADDLE_X, PADDLE_Y)]
+        self.paddles = [Paddle.new("Right Player", LEFT_PADDLE_X,  PADDLE_Y),
+          Paddle.new("Left Player", RIGHT_PADDLE_X, PADDLE_Y)]
       end
 
       def update
