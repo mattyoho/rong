@@ -13,7 +13,7 @@ module Rong
         :score_callbacks,  :hit_callbacks,
         :bounce_callbacks, :win_callbacks
 
-      def initialize
+      def initialize(&block)
         self.left_score = self.right_score = 0
 
         self.score_callbacks  = []
@@ -22,8 +22,9 @@ module Rong
         self.win_callbacks    = []
 
         self.ball    = Ball.new(WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
-        self.paddles = [Paddle.new("Player 1", LEFT_PADDLE_X,  PADDLE_Y),
-          Paddle.new("Player 2", RIGHT_PADDLE_X, PADDLE_Y)]
+        self.paddles = [Paddle.new("Player 1", :left, LEFT_PADDLE_X,  PADDLE_Y),
+          Paddle.new("Player 2", :right, RIGHT_PADDLE_X, PADDLE_Y)]
+        yield self
       end
 
       def update

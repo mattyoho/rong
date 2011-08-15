@@ -14,7 +14,8 @@ module Rong
         super(start_x, start_y)
       end
 
-      def reflect_x
+      def reflect_x(x_position=nil)
+        move_to(x_position, y) if x_position
         self.x_direction *= -1
       end
 
