@@ -29,12 +29,11 @@ module Rong
         super(WINDOW_WIDTH, WINDOW_HEIGHT, false)
         self.caption = "Rong: Ruby Pong"
 
-        self.game = Rong::Elements::Game.new
-        game.on_score  {|left, right| update_scores(left, right) }
-        game.on_hit    { paddle_blip.play(1,1) }
-        game.on_bounce { wall_blip.play(1,1) }
-        game.on_win do |winner|
-          self.winner_image = Gosu::Image.from_text(self, "#{winner.name} wins!", SCORE_FONT, SCORE_HEIGHT)
+        self.game = Rong::Elements::Game.new do |g|
+          g.on_score  {|left, right| update_scores(left, right) }
+          g.on_hit    { paddle_blip.play }
+          g.on_bounce { wall_blip.play }
+          g.on_win    {|winner| create_winner_banner(winner) }
         end
 
         self.paddle_boxes = game.paddles.map {|p| DrawableElement.new(self, p) }
@@ -75,9 +74,7 @@ module Rong
         draw_background
         paddle_boxes.each {|p| p.draw }
         ball_box.draw
-        if winner_image
-          winner_image.draw(WINDOW_CENTER_X - (winner_image.width / 2), WINDOW_CENTER_Y, Window::ZIndex::HUD)
-        end
+        draw_winner_banner if winner?
       end
 
       def draw_background
@@ -98,6 +95,18 @@ module Rong
       def draw_scores
         left_score_image.draw(WINDOW_CENTER_X - (SCORE_X_OFFSET + left_score_image.width), SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
         right_score_image.draw(WINDOW_CENTER_X + SCORE_X_OFFSET, SCORE_Y_OFFSET, Window::ZIndex::BACKGROUND)
+      end
+
+      def create_winner_banner(winner)
+        self.winner_image = Gosu::Image.from_text(self, "#{winner.name} wins!", SCORE_FONT, SCORE_HEIGHT)
+      end
+
+      def draw_winner_banner
+        winner_image.draw(WINDOW_CENTER_X - (winner_image.width / 2), WINDOW_CENTER_Y, Window::ZIndex::HUD)
+      end
+
+      def winner?
+        winner_image
       end
 
       def update_scores(left_score, right_score)
