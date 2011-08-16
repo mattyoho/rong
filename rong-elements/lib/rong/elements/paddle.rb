@@ -1,3 +1,5 @@
+require 'rong/elements/entity'
+
 module Rong
   module Elements
     class Paddle
