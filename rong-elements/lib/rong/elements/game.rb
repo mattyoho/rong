@@ -24,6 +24,7 @@ module Rong
         self.ball    = Ball.new(WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
         self.paddles = [Paddle.new("Player 1", :left, LEFT_PADDLE_X,  PADDLE_Y),
                         Paddle.new("Player 2", :right, RIGHT_PADDLE_X, PADDLE_Y)]
+        yield self if block_given?
       end
 
       [:left, :right].each do |side|
