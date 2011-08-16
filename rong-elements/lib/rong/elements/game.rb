@@ -82,8 +82,7 @@ module Rong
       end
 
       def declare_winner(who)
-        ball.move_to(WINDOW_CENTER_X, WINDOW_CENTER_Y)
-        ball.stop
+        ball.stop(WINDOW_CENTER_X, WINDOW_CENTER_Y)
         self.winner = who
         win_callbacks.each {|cb| cb.call(who) }
       end

@@ -30,8 +30,12 @@ module Rong
         self.y += SPEED * Math.sin(angle_radians) * y_direction
       end
 
-      def stop
+      def stop(resest_x=nil, reset_y=nil)
         self.x_direction = self.y_direction = 0
+
+        reset_x ||= x
+        reset_y ||= y
+        move_to(reset_x, reset_y)
       end
 
       def serve_left_from(x, y)
