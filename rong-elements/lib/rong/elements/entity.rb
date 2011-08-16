@@ -33,25 +33,19 @@ module Rong
       end
 
       def intersects?(other)
-        if other.left < right && other.left > left
-          if other.bottom < bottom && other.bottom > top
-            true
-          elsif other.top > top && other.top < bottom
-            true
-          else
-            false
-          end
-        elsif other.right > left && other.right < right
-          if other.bottom < bottom && other.bottom > top
-            true
-          elsif other.top > top && other.top < bottom
-            true
-          else
-            false
-          end
-        else
-          false
+        if left > other.right
+          return false
         end
+        if right < other.left
+          return false
+        end
+        if top > other.bottom
+          return false
+        end
+        if bottom < other.top
+          return false
+        end
+        true
       end
     end
   end
