@@ -23,8 +23,16 @@ module Rong
 
         self.ball    = Ball.new(WINDOW_CENTER_X, WINDOW_CENTER_Y, 0)
         self.paddles = [Paddle.new("Player 1", :left, LEFT_PADDLE_X,  PADDLE_Y),
-          Paddle.new("Player 2", :right, RIGHT_PADDLE_X, PADDLE_Y)]
-        yield self
+                        Paddle.new("Player 2", :right, RIGHT_PADDLE_X, PADDLE_Y)]
+      end
+
+      [:left, :right].each do |side|
+        class_eval <<-MET, __FILE__, __LINE__
+          def #{side}_paddle
+            @#{side}_paddel ||= paddles.find {|p| p.side == :#{side} }
+            @#{side}_paddel
+          end
+        MET
       end
 
       def update
@@ -77,8 +85,8 @@ module Rong
       end
 
       def reset_paddles
-        paddles.first.move_to(LEFT_PADDLE_X,  PADDLE_Y)
-        paddles.last.move_to(RIGHT_PADDLE_X,  PADDLE_Y)
+        left_paddle.move_to(LEFT_PADDLE_X,  PADDLE_Y)
+        right_paddle.move_to(RIGHT_PADDLE_X,  PADDLE_Y)
       end
 
       def declare_winner(who)
@@ -104,11 +112,11 @@ module Rong
 
         if ball.left < 0 || ball.right > WINDOW_WIDTH
           if ball.left < 0
-            self.left_score += 1
-            ball.serve_right_from(SERVE_FROM_X, SERVE_FROM_Y)
-          else
             self.right_score += 1
             ball.serve_left_from(SERVE_FROM_X, SERVE_FROM_Y)
+          else
+            self.left_score += 1
+            ball.serve_right_from(SERVE_FROM_X, SERVE_FROM_Y)
           end
           score
           reset_paddles
@@ -117,9 +125,9 @@ module Rong
 
       def check_win_condition
         if left_score >= WINNING_SCORE
-          declare_winner(paddles.first)
+          declare_winner(left_paddle)
         elsif right_score >= WINNING_SCORE
-          declare_winner(paddles.last)
+          declare_winner(right_paddle)
         end
       end
     end
