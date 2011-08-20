@@ -1,4 +1,4 @@
-version = '0.2.3'
+version = '0.2.4'
 
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/mattyoho/rong'
 
   s.add_runtime_dependency('gosu', '~> 0.7.28')
-  s.add_runtime_dependency('rong-elements', '~> 0.2.1')
+  s.add_runtime_dependency('rong-elements', '~> 0.2.2')
 
   s.add_development_dependency('rspec', '~> 2.6.0')
   s.add_development_dependency('guard', '~> 0.6.1')
