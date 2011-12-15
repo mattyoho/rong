@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/mattyoho/rong'
 
   s.add_runtime_dependency('rong-elements', '~> 0.2.2')
+  s.add_runtime_dependency('redis', '< 3.0.0')
 
   s.add_development_dependency('rspec', '~> 2.6.0')
   s.add_development_dependency('guard', '~> 0.6.1')
